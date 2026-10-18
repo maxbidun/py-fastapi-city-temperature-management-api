@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "cities"
-    DATABASE_NAME: str | None = "sqlite+aiosqlite:///./cities.db"
+    DATABASE_URL: str | None = "sqlite+aiosqlite:///./cities.db"
 
     class Config:
         env_file = ".env"

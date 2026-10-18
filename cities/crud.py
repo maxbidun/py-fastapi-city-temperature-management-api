@@ -1,6 +1,5 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload, selectinload
 
 from cities import models, schemas
 
@@ -27,7 +26,7 @@ async def delete_city(db:AsyncSession, city_id:int) -> bool:
     return True
 
 
-async def get_city(db:AsyncSession, city_id:int) -> models.City|bool:
+async def get_city(db:AsyncSession, city_id:int) -> models.City|bool|None:
     city = await db.get(models.City, city_id)
     if not city:
         return False

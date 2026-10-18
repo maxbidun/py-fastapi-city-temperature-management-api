@@ -2,7 +2,6 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.util import await_
 
 from dependencies import get_db
 from cities import crud, schemas
@@ -35,3 +34,7 @@ async def update_city(city_id: int, city_update: schemas.CityUpdate, db: Annotat
     if city is None:
         raise HTTPException(status_code=404, detail="City not found")
     return city
+
+@router.delete("/cities/{city_id}", response_model=schemas.City)
+async def delete_city(city_id: int, db: Annotated[AsyncSession, Depends(get_db)]):
+    return await crud.delete_city(db=db, city_id=city_id)
