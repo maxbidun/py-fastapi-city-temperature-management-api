@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -26,20 +27,18 @@ async def delete_city(db:AsyncSession, city_id:int) -> bool:
     return True
 
 
-async def get_city(db:AsyncSession, city_id:int) -> models.City|bool|None:
+async def get_city(db:AsyncSession, city_id:int) -> models.City:
     city = await db.get(models.City, city_id)
     if not city:
-        return False
+        raise HTTPException(status_code=404, detail="City not found")
     return city
 
 async def update_city(db:AsyncSession, city_id:int, city_update:schemas.CityUpdate) -> models.City:
     city = await db.get(models.City, city_id)
 
-    if not city:
-        return None
-
-    city.name = city_update.name
-    city.additional_info = city_update.additional_info
+    if city_update is not None:
+        city.name = city_update.name
+        city.additional_info = city_update.additional_info
 
     await db.commit()
     await db.refresh(city)
